@@ -1,6 +1,6 @@
 # Pong Game
 
-Este é um simples jogo de Pong desenvolvido em Python usando a biblioteca Pygame. O objetivo é jogar contra outro jogador (ou contra você mesmo, no caso de controle local) e marcar pontos ao fazer a bola passar pela raquete do adversário. O jogo termina quando um dos jogadores atinge 10 pontos.
+Este é um simples jogo de Pong desenvolvido em Python usando a biblioteca Pygame, feito com a IA ChatGPT para fins de estudo. O objetivo é jogar contra outro jogador (ou contra você mesmo, no caso de controle local) e marcar pontos ao fazer a bola passar pela raquete do adversário. O jogo termina quando um dos jogadores atinge 10 pontos.
 
 ## Requisitos
 
