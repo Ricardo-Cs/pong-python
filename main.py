@@ -1,5 +1,6 @@
 import pygame
 import sys
+import time  # Para adicionar a pausa de 1 segundo
 
 # Inicializa o pygame
 pygame.init()
@@ -18,7 +19,7 @@ RAQUETE_LARGURA = 15
 RAQUETE_ALTURA = 90
 BOLA_RAIO = 10
 
-# Velocidade das raquetes e da bola
+# Velocidade das raquetes e da bola (declaradas globalmente)
 raquete_velocidade = 10
 bola_velocidade_x = 7
 bola_velocidade_y = 7
@@ -30,8 +31,15 @@ def desenhar_raquete(x, y):
 def desenhar_bola(x, y):
     pygame.draw.circle(tela, BRANCO, (x, y), BOLA_RAIO)
 
+# Função para salvar a pontuação em um arquivo de texto
+def salvar_pontuacao(pontos_esquerda, pontos_direita):
+    with open("pontuacoes.txt", "a") as arquivo:
+        arquivo.write(f"Esquerda: {pontos_esquerda} - Direita: {pontos_direita}\n")
+
 # Função principal do jogo
 def main():
+    global bola_velocidade_x, bola_velocidade_y  # Usar variáveis globais
+
     # Posições iniciais
     raquete_esquerda_y = (ALTURA - RAQUETE_ALTURA) // 2
     raquete_direita_y = (ALTURA - RAQUETE_ALTURA) // 2
@@ -50,6 +58,8 @@ def main():
         # Verificar eventos (teclado, fechar janela)
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
+                # Salvar a pontuação antes de fechar
+                salvar_pontuacao(pontos_esquerda, pontos_direita)
                 pygame.quit()
                 sys.exit()
 
@@ -85,10 +95,29 @@ def main():
         if bola_x - BOLA_RAIO <= 0:
             pontos_direita += 1
             bola_x, bola_y = LARGURA // 2, ALTURA // 2  # Resetar a bola
+            # Pausar o jogo por 1 segundo após marcar ponto
+            time.sleep(1)
 
         if bola_x + BOLA_RAIO >= LARGURA:
             pontos_esquerda += 1
             bola_x, bola_y = LARGURA // 2, ALTURA // 2  # Resetar a bola
+            # Pausar o jogo por 1 segundo após marcar ponto
+            time.sleep(1)
+
+        # Verificar se alguém atingiu 10 pontos para finalizar o jogo
+        if pontos_esquerda >= 10 or pontos_direita >= 10:
+            vencedor = "Esquerda" if pontos_esquerda > pontos_direita else "Direita"
+            # Salvar pontuação final
+            salvar_pontuacao(pontos_esquerda, pontos_direita)
+            # Mostrar mensagem de fim de jogo
+            fonte = pygame.font.SysFont("Arial", 40)
+            texto_fim = fonte.render(f"{vencedor} ganhou!", True, BRANCO)
+            tela.fill(PRETO)
+            tela.blit(texto_fim, (LARGURA // 2 - texto_fim.get_width() // 2, ALTURA // 2 - texto_fim.get_height() // 2))
+            pygame.display.update()
+            time.sleep(3)  # Exibir mensagem por 3 segundos
+            pygame.quit()
+            sys.exit()
 
         # Preencher a tela com fundo preto
         tela.fill(PRETO)
